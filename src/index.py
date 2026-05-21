@@ -22,7 +22,7 @@ def get_apc_info():
 	return apc_info
 
 
-st.image("brock_logo.png",width=200)
+#st.image("brock_logo.png",width=200)
 st.title("APC Discount and Waivers")
 st.write("""Below are details about what Article Processing Charge (APC) discounts and waivers are available to members of the Brock community. 
 	        More details can be found on the library site [:link:](https://brocku.ca/library/open-access/open-access-investments/)""")
