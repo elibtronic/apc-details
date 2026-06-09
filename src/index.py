@@ -1,6 +1,27 @@
 import streamlit as st
 import pandas as pd
 import sqlite3
+import requests
+import json
+
+
+def journal_details(issn):   
+    detail_string = ""
+    j_item = requests.get("https://api.openalex.org/sources/issn:"+issn).json()
+    try:
+
+        if not j_item['is_oa']:
+            detail_string += " - Title is _closed_ and might be eligible for discount. Please see [journal homepage]("+j_item['homepage_url']+")"
+        else: 
+            detail_string += " - Could not determine if title is eligible for discount, or title might already be open access. Please see [journal homepage]("+j_item['homepage_url']+")"
+        
+        if j_item["apc_usd"]: 
+            detail_string += "\n- Usual Author Processing Charge for this title is: **"+str(j_item["apc_usd"])+"** USD"
+
+        detail_string += "\n- More analytics for this title from [OpenAlex]("+j_item['ids']['openalex']+")"
+    except:
+        detail_string = "**Could not retrieve extra journal information**"
+    return detail_string
 
 
 
@@ -18,6 +39,7 @@ def get_publisher_info():
 def get_apc_info():
 	conn = sqlite3.connect("apc-details.db")
 	apc_info = pd.read_sql_query("SELECT * from apcDetails",con=conn)
+	apc_info.sort_values(by=["Journal_Title"],inplace=True)
 	conn.close()
 	return apc_info
 
@@ -41,11 +63,17 @@ with pubTab:
 with journalTab:
 
 	apc_info = get_apc_info()
-	pubSelect = st.selectbox(label="Select a Publisher to Narrow", index=None, options=apc_info["Publisher"].unique())
+	pubSelect = st.selectbox(label="Select a Publisher to Narrow", index=None, options=apc_info["Publisher"].sort_values(ascending=True).unique())
 
 	if pubSelect:
 		infoshow = apc_info[apc_info["Publisher"] == pubSelect]
-		event = st.dataframe(infoshow[["Journal_Title","pubDiscount"]],on_select="rerun",selection_mode="single-row")
+		st.write("Details for: "+str(pubSelect))
+
+		#pub_info["Publisher"] == pubSelect
+		
+
+		st.write("_Select Title for more information_")
+		event = st.dataframe(infoshow[["Journal_Title"]],on_select="rerun",selection_mode="single-row")
 		st.write("_Titles total for publisher: "+ str(len(infoshow))+"_")
 	else:
 		infoshow = apc_info
@@ -53,7 +81,15 @@ with journalTab:
 		st.write("_Titles total for all publishers: "+ str(len(infoshow))+"_")
 
 	if event.selection.rows:		
-		st.dataframe(infoshow.iloc[event.selection.rows[0]])
+		#st.dataframe(infoshow.iloc[event.selection.rows[0]])
+		st.markdown("--------")
+		st.markdown("")
+		st.markdown(" **Journal Title:** "+infoshow.iloc[event.selection.rows[0]]['Journal_Title'])
+		st.markdown("**Publisher:** "+infoshow.iloc[event.selection.rows[0]]['Publisher'])
+		st.markdown("**Typical Publisher Discount:** "+infoshow.iloc[event.selection.rows[0]]['pubDiscount'])
+		st.markdown("--------")
+		st.markdown("**Extra Details:** ")
+		st.markdown(journal_details(infoshow.iloc[event.selection.rows[0]]['ISSN']))
 
 
 
