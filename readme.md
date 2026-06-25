@@ -4,6 +4,8 @@ _\* APC Entitlement Explorer_
 
 APCEE is a Streamlit app that will take a Google Sheet of information about Author Processing Charge (APC) waivers and discounts and present that to end users in an appealing way. You are free (and encouraged) to make a version of this platform for your institution.
 
+The design philsophy for this platform is very much inspiried by Collection Builder, particularly [CB-Sheets](https://collectionbuilder.github.io/sheets/). You can run the whole thing without installing anythin on you local machine. Data goes in a Google Sheet, the app is deployed to Streamlit Cloud. Easy, peasy.
+
 
 ## APCEE in action
 
@@ -18,7 +20,7 @@ This video will explain how the platform works and the steps required to recreat
 
 
 
-## How to Localize
+## Setting up your own
 
 You'll need a couple of things to put together to recreate this:
 
@@ -33,7 +35,7 @@ You'll need a couple of things to put together to recreate this:
 GH Will allow you to host all of your app code so that it can be deployed to the Streamlit service.
 
 - Fork the repository
-- Modify `src/index.py` to change the messages and logos etc.
+- Modify `src/index.py` to change the few variables at the top of the file.
 
 ### Google Sheets
 
@@ -63,46 +65,6 @@ _publisherInfo tab is where the publisher details go_
 **Publish to the web** each of the tabs as CSV files an make note of the URLs. The script in the next step will create an sqlite database by combining these two tabs together. Please note, column names need to be exactly as specified.
 
 
-
-### Command line
-
-You'll need to install Python, so that you can install streamlit. Open a Command line in the same folder as the forked repository.
-
-``` bash
-
-pip install streamlit
-
-```
-
-
-### Build Database and configure
-
-There is a script that will grab the contents of the two sheets and build them into a database that will be used by the app. You need to add in URLs to the two CSVs from the Google Sheets step.
-
-edit the `build_database.py` file to add
-
-```
-
-journalUrL = 
-pubUrl = 
-
-
-```
-
-then
-
-``` bash
-
-python build_database.py
-
-
-```
-
-You can now modfiy the app to change the logo, change the preamble, pull in a different logo etc.
-
-To do this, modify `src/index.py`
-
-
 ### Deploy to Streamlit Cloud
 
 - Head to [Streamlit cloud]()
@@ -111,12 +73,8 @@ To do this, modify `src/index.py`
 - find the url of your forked repository
 
 
-## Updating the app
+## Tweak it more?
 
-There is considerably less work involved in updating the app once you have it working:
+You can do everything you need to do run an instance of this without installing anything and just by visiting a few sites and setting up accounts. You can of course clone the repository, install steamlit and modfiy things even more.
 
-
-- Make changes to your spreadsheet
-- Change the _'Last Updated'_ Date message on `src/index.py` 
-- run the build database script again `python build_database.py`
-- Push your GitHub repository with your updates, the app will reload
+### Setting it up locally
