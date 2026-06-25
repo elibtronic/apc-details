@@ -74,7 +74,7 @@ combined_DF, pub_DF = get_data(JOURNAL_URL,PUB_URL)
 
 
 #### Render Page
-st.image("logo.png",width=200)
+#st.image("logo.png",width=200)
 st.write(PREAMBLE)
 
 
