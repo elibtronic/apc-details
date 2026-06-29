@@ -27,7 +27,7 @@ logging = True
 #### Functions need to manipulate data
 
 
-@st.cache_data(ttl=3600)
+@st.cache_data(ttl=3600,show_spinner="Please wait, downloading data...",show_time=True)
 def get_data(JOURNAL_URL, PUB_URL):
 
 	#combined data
@@ -79,12 +79,15 @@ def log_apc_use(L_URL,issn="",publisher=""):
 
 
 #### Load data using cache function
+
+
 combined_DF, pub_DF = get_data(JOURNAL_URL,PUB_URL)
 
 
 #### Render Page
-#st.image("logo.png",width=200)
+st.image("images/logo.png",width=200)
 st.write(PREAMBLE)
+
 
 
 journalTab, pubTab = st.tabs(['By Journal','Publisher'])
