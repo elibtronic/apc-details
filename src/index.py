@@ -4,9 +4,9 @@ import pandas as pd
 
 
 ### Google Sheets
-
 PUB_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRPFcOiXgZAo6XENgRXj3FoQ_BnbsYtAJq0QtlnhjGmpIkQjIp8eZNX6C66tcaooh1pfaUR8AULfSji/pub?gid=1143475194&single=true&output=csv"
 JOURNAL_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRPFcOiXgZAo6XENgRXj3FoQ_BnbsYtAJq0QtlnhjGmpIkQjIp8eZNX6C66tcaooh1pfaUR8AULfSji/pub?gid=0&single=true&output=csv"
+L_URL = "https://docs.google.com/forms/d/e/1FAIpQLSe61TNpD96WMGonWeV-w0nkvQjGRCfKaB6qsFmzQQXhquFiiA/formResponse"
 
 PREAMBLE = """
 # Article Processing Charge Agreements
@@ -18,6 +18,7 @@ More details can be found on the library site [:link:](https://brocku.ca/library
 _Information Last Updated: May, 19, 2026_
 """
 
+logging = True
 
 ###
 
@@ -65,6 +66,14 @@ def get_openalex_journal(issn,confidence):
     return detail_string
 
 
+def log_apc_use(L_URL,issn="",publisher=""):
+    form_data = {
+        "entry.192508866": issn,
+        "entry.789120919": publisher,
+    }
+    result = requests.post(L_URL,data=form_data)
+    return result
+
 ####
 
 
@@ -93,6 +102,8 @@ with journalTab:
 		st.write("General publisher discount details:")
 		pub_details = pub_DF[pub_DF["Publisher"] == pubSelect]["Discount"].iloc[0]
 		st.write(" - "+pub_details)
+		if logging:
+			log_apc_use(L_URL,publisher=pubSelect)
 
 		st.write("_Select a journal title for more information_")
 
@@ -118,6 +129,9 @@ with journalTab:
 
 		j_details["Additional Information"] = get_openalex_journal(j_details["ISSN"],j_details["Confidence"])
 		del j_details["Confidence"] #comment back out for diagnostic info
+
+		if logging:
+			log_apc_use(L_URL,issn=j_details["ISSN"])
 
 		st.table(j_details)
 		
