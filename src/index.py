@@ -22,10 +22,18 @@ PREAMBLE = """
 # Article Processing Charge Agreements
 Below are details about what Article Processing Charge (APC) discounts and waivers are available to members of the Brock community. More details can be found on the library site [:link:](https://brocku.ca/library/open-access/open-access-investments/).
 
+:dart: _Title lists are built using  ULRICHs data [:link:](https://ulrichsweb.serialssolutions.com/login). Every effort has been made to ensure data is correct._
+
  :spiral_calendar: **Information Last Updated - July, 2, 2026.**
 
+|Status|APC Discount?|
+|--|--|
+|❓| Please check|
+|✅| Verified|
 
-:dart: _Title lists are built using  ULRICHs data [:link:](https://ulrichsweb.serialssolutions.com/login). Every effort has been made to ensure data is correct._
+
+
+
 """
 
 HELP_MESSAGE = """
@@ -40,6 +48,12 @@ LOGGING = True #Switch to true to log lookups of publisher and issn to Google Sh
 IMAGE_PATH = "images/logo.png" #Put your logo in the images folder, renamed to logo.png, defaults to 200 px wide
 
 
+verify_map = {
+	0 : "❓",
+	1 : "✅",
+}
+
+
 #### Functions need to manipulate data
 @st.cache_data(ttl=3600,show_spinner="Please wait, downloading data...",show_time=True)
 def get_data(JOURNAL_URL, PUB_URL):
@@ -52,14 +66,14 @@ def get_data(JOURNAL_URL, PUB_URL):
     pub_DF["Publisher Description"] = "**"+pub_DF["Publisher"] + "** [:link:](" + pub_DF["pubUrl"]+")"
     del pub_DF["pubUrl"]
     pub_DF.columns = ["Publisher","Discount","Publisher Description"]
-    combined_DF.columns = ["Publisher","Title","ISSN","Confidence","Publisher URL","Publisher Discount"]
+    combined_DF.columns = ["Publisher","Title","ISSN","Verified","Publisher URL","Publisher Discount"]
     combined_DF.sort_values(by=['Title','Publisher'], inplace=True, key=lambda col: col.str.lower() )
     combined_DF.dropna(subset=["Title","ISSN"],inplace=True)
-
+    combined_DF["Status"] = combined_DF["Verified"].map(verify_map)
     return combined_DF, pub_DF
 
 
-def get_openalex_journal(issn,confidence):
+def get_openalex_journal(issn,verified):
 
     detail_string = ""
 
@@ -69,7 +83,7 @@ def get_openalex_journal(issn,confidence):
     try:
         j_item = requests.get("https://api.openalex.org/sources/issn:"+issn).json()
 
-        if confidence != 1:
+        if verified != 1:
 	        if not j_item['is_oa']:
 	            detail_string += " - Title is not considered _Open Access_ and  may be eligible for discount. :arrow_right: Please check _Publisher Discount_ for specifications and see [journal homepage]("+j_item['homepage_url']+") to ensure discount applies."
 	        else: 
@@ -129,13 +143,13 @@ with journalTab:
 
 		st.write("_Select a journal title from this publisher for more information_")
 
-		event = st.dataframe(infoshow[["Title","ISSN"]],on_select="rerun",selection_mode="single-row",hide_index=True)
+		event = st.dataframe(infoshow[["Title","ISSN","Status"]],on_select="rerun",selection_mode="single-row",hide_index=True)
 		#st.dataframe(infoshow[["Title","ISSN"]],hide_index=True)
 		st.write("Total titles for this publisher: ",len(infoshow))
 	else:
 		infoshow = combined_DF
 		st.write("_Journal Titles_")
-		event = st.dataframe(infoshow[["Title","ISSN","Publisher"]],on_select="rerun",selection_mode="single-row",hide_index=True)
+		event = st.dataframe(infoshow[["Title","ISSN","Publisher","Status"]],on_select="rerun",selection_mode="single-row",hide_index=True)
 		st.write("Total titles for all publishers: ",len(infoshow))
 
 	if event.selection.rows:
@@ -143,14 +157,15 @@ with journalTab:
 		j_details = {
 
 		"Title": infoshow.iloc[event.selection.rows[0]]["Title"],
+		"Status": infoshow.iloc[event.selection.rows[0]]["Status"],
 		"ISSN" : infoshow.iloc[event.selection.rows[0]]["ISSN"],
 		"Publisher": infoshow.iloc[event.selection.rows[0]]["Publisher"],
-		"Confidence": infoshow.iloc[event.selection.rows[0]]["Confidence"],
+		"Verified": infoshow.iloc[event.selection.rows[0]]["Verified"],
 		"Publisher Discount": infoshow.iloc[event.selection.rows[0]]["Publisher Discount"]
 		}
 
-		j_details["Additional Information"] = get_openalex_journal(j_details["ISSN"],j_details["Confidence"])
-		del j_details["Confidence"] #comment back out for diagnostic info
+		j_details["Additional Information"] = get_openalex_journal(j_details["ISSN"],j_details["Verified"])
+		del j_details["Verified"] #comment back out for diagnostic info
 
 		if LOGGING:
 			log_apc_use(ISSN_ENTRY, PUBLISHER_ENTRY, L_URL,issn=j_details["ISSN"])
