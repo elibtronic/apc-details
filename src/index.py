@@ -124,7 +124,7 @@ st.write(PREAMBLE)
 
 pubSelect = st.selectbox(label="Select a publisher to narrow", index=None, options=combined_DF["Publisher"].sort_values(ascending=True).unique())
 
-st.write("_Click in box, then Ctrl+F / ⌘+F to search_ ")
+
 if pubSelect:
 	infoshow = combined_DF[combined_DF["Publisher"] == pubSelect]
 	st.write("General publisher discount details:")
@@ -134,13 +134,13 @@ if pubSelect:
 		log_apc_use(ISSN_ENTRY, PUBLISHER_ENTRY, L_URL,publisher=pubSelect)
 
 	st.write("_Select a journal title from this publisher for more information_")
-
+	st.write("_Click in box below, then Ctrl+F / ⌘+F to search_ ")
 	event = st.dataframe(infoshow[["Title","ISSN","Status"]],on_select="rerun",selection_mode="single-row",hide_index=True)
 	#st.dataframe(infoshow[["Title","ISSN"]],hide_index=True)
 	st.write("Total titles for this publisher: ",len(infoshow))
 else:
 	infoshow = combined_DF
-
+	st.write("_Click in box below, then Ctrl+F / ⌘+F to search_ ")
 	event = st.dataframe(infoshow[["Title","ISSN","Publisher","Status"]],on_select="rerun",selection_mode="single-row",hide_index=True)
 	st.write("Total titles for all publishers: ",len(infoshow))
 
