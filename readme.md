@@ -1,6 +1,18 @@
 # apc details
 
 
+```
+                              .___      __         .__.__          
+   _____  ______   ____     __| _/_____/  |______  |__|  |   ______
+   \__  \ \____ \_/ ___\   / __ |/ __ \   __\__  \ |  |  |  /  ___/
+    / __ \|  |_> >  \___  / /_/ \  ___/|  |  / __ \|  |  |__\___ \ 
+   (____  /   __/ \___  > \____ |\___  >__| (____  /__|____/____  > 
+        \/|__|        \/       \/    \/          \/             \/ 
+
+```
+
+
+
 A Streamlit app that will take a Google Sheet of information about Article Processing Charges (APC) waivers and discounts, and present that to end users in an appealing way. You are free (and encouraged) to make a version of this platform for your institution.
 
 A list of journals and publishers is presented to the end user. The user can click on a publisher to only see titles from that provider. The user can also click on a journal title to retrieve more dynamics about that title from [OpenAlex](https://openalex.org/).
@@ -147,4 +159,4 @@ source .venv/bin/activate
 streamlit run src/index.py
 ```
 
-Then edit `index.py` in a text editor of your choice. Streamlit should automatically render your changed app.
+Then edit `index.py` in a text editor of your choice. Streamlit should automatically render your changed app on the machine you are running it on. To update your app, simply push your changes to GitHub.
