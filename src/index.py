@@ -122,56 +122,53 @@ st.image(IMAGE_PATH,width=200)
 st.write(PREAMBLE)
 
 
+pubSelect = st.selectbox(label="Select a publisher to narrow", index=None, options=combined_DF["Publisher"].sort_values(ascending=True).unique())
 
-journalTab, pubTab = st.tabs(['By Journal','By Publisher'])
+st.write("_Click in box, then Ctrl+F / ⌘+F to search_ ")
+if pubSelect:
+	infoshow = combined_DF[combined_DF["Publisher"] == pubSelect]
+	st.write("General publisher discount details:")
+	pub_details = pub_DF[pub_DF["Publisher"] == pubSelect]["Discount"].iloc[0]
+	st.write(" - "+pub_details)
+	if LOGGING:
+		log_apc_use(ISSN_ENTRY, PUBLISHER_ENTRY, L_URL,publisher=pubSelect)
 
+	st.write("_Select a journal title from this publisher for more information_")
 
-with pubTab:
+	event = st.dataframe(infoshow[["Title","ISSN","Status"]],on_select="rerun",selection_mode="single-row",hide_index=True)
+	#st.dataframe(infoshow[["Title","ISSN"]],hide_index=True)
+	st.write("Total titles for this publisher: ",len(infoshow))
+else:
+	infoshow = combined_DF
+
+	event = st.dataframe(infoshow[["Title","ISSN","Publisher","Status"]],on_select="rerun",selection_mode="single-row",hide_index=True)
+	st.write("Total titles for all publishers: ",len(infoshow))
+
+if event.selection.rows:
+
+	j_details = {
+
+	"Title": infoshow.iloc[event.selection.rows[0]]["Title"],
+	"Status": infoshow.iloc[event.selection.rows[0]]["Status"],
+	"ISSN" : infoshow.iloc[event.selection.rows[0]]["ISSN"],
+	"Publisher": infoshow.iloc[event.selection.rows[0]]["Publisher"],
+	"Verified": infoshow.iloc[event.selection.rows[0]]["Verified"],
+	"Publisher Discount": infoshow.iloc[event.selection.rows[0]]["Publisher Discount"]
+	}
+
+	j_details["Additional Information"] = get_openalex_journal(j_details["ISSN"],j_details["Verified"])
+	del j_details["Verified"] #comment back out for diagnostic info
+
+	if LOGGING:
+		log_apc_use(ISSN_ENTRY, PUBLISHER_ENTRY, L_URL,issn=j_details["ISSN"])
+
+	st.table(j_details)
+
+#with pubTab:
+
+with st.expander("Publisher Details"):
 	st.table(pub_DF[["Publisher Description","Discount"]])
 
-
-with journalTab:
-	pubSelect = st.selectbox(label="Select a publisher to narrow", index=None, options=combined_DF["Publisher"].sort_values(ascending=True).unique())
-
-	if pubSelect:
-		infoshow = combined_DF[combined_DF["Publisher"] == pubSelect]
-		st.write("General publisher discount details:")
-		pub_details = pub_DF[pub_DF["Publisher"] == pubSelect]["Discount"].iloc[0]
-		st.write(" - "+pub_details)
-		if LOGGING:
-			log_apc_use(ISSN_ENTRY, PUBLISHER_ENTRY, L_URL,publisher=pubSelect)
-
-		st.write("_Select a journal title from this publisher for more information_")
-
-		event = st.dataframe(infoshow[["Title","ISSN","Status"]],on_select="rerun",selection_mode="single-row",hide_index=True)
-		#st.dataframe(infoshow[["Title","ISSN"]],hide_index=True)
-		st.write("Total titles for this publisher: ",len(infoshow))
-	else:
-		infoshow = combined_DF
-		st.write("_Journal Titles_")
-		event = st.dataframe(infoshow[["Title","ISSN","Publisher","Status"]],on_select="rerun",selection_mode="single-row",hide_index=True)
-		st.write("Total titles for all publishers: ",len(infoshow))
-
-	if event.selection.rows:
-
-		j_details = {
-
-		"Title": infoshow.iloc[event.selection.rows[0]]["Title"],
-		"Status": infoshow.iloc[event.selection.rows[0]]["Status"],
-		"ISSN" : infoshow.iloc[event.selection.rows[0]]["ISSN"],
-		"Publisher": infoshow.iloc[event.selection.rows[0]]["Publisher"],
-		"Verified": infoshow.iloc[event.selection.rows[0]]["Verified"],
-		"Publisher Discount": infoshow.iloc[event.selection.rows[0]]["Publisher Discount"]
-		}
-
-		j_details["Additional Information"] = get_openalex_journal(j_details["ISSN"],j_details["Verified"])
-		del j_details["Verified"] #comment back out for diagnostic info
-
-		if LOGGING:
-			log_apc_use(ISSN_ENTRY, PUBLISHER_ENTRY, L_URL,issn=j_details["ISSN"])
-
-		st.table(j_details)
-		
 st.write(HELP_MESSAGE)
 
 
