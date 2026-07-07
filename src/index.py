@@ -127,9 +127,8 @@ pubSelect = st.selectbox(label="Select a publisher to narrow", index=None, optio
 
 if pubSelect:
 	infoshow = combined_DF[combined_DF["Publisher"] == pubSelect]
-	st.write("General publisher discount details:")
 	pub_details = pub_DF[pub_DF["Publisher"] == pubSelect]["Discount"].iloc[0]
-	st.write(" - "+pub_details)
+	st.info(pub_details,title="Publisher Information",icon="📕")
 	if LOGGING:
 		log_apc_use(ISSN_ENTRY, PUBLISHER_ENTRY, L_URL,publisher=pubSelect)
 
@@ -156,11 +155,18 @@ if event.selection.rows:
 	"Publisher Discount": infoshow.iloc[event.selection.rows[0]]["Publisher Discount"]
 	}
 
+	if j_details["Verified"]:
+		st.success("APC discount details found!",icon="📕")
+	else:
+		st.error("APC discount unclear or does not apply to this title, please verify!",icon="📕")
+
 	j_details["Additional Information"] = get_openalex_journal(j_details["ISSN"],j_details["Verified"])
 	del j_details["Verified"] #comment back out for diagnostic info
 
 	if LOGGING:
 		log_apc_use(ISSN_ENTRY, PUBLISHER_ENTRY, L_URL,issn=j_details["ISSN"])
+
+
 
 	st.table(j_details)
 
