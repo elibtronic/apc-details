@@ -20,9 +20,7 @@ PUBLISHER_ENTRY = "entry.789120919"
 ### You can use Markdown in the following to localize to your place
 PREAMBLE = """
 # Article Processing Charge Agreements
-Below are details about what Article Processing Charge (APC) discounts and waivers are available to members of the Brock community. More details can be found on the library site [:link:](https://brocku.ca/library/open-access/open-access-investments/).
-
-:dart: _Title lists are built using  ULRICHs data [:link:](https://ulrichsweb.serialssolutions.com/login). Every effort has been made to ensure data is correct._
+Below are details about what Article Processing Charge (APC) discounts and waivers are available to members of the Brock community. More details can be found on the library site [:link:](https://brocku.ca/library/open-access/open-access-investments/). Title lists are built using  ULRICHs data [:link:](https://ulrichsweb.serialssolutions.com/login). Every effort has been made to ensure data is correct.
 
  :spiral_calendar: **Information Last Updated - July 8, 2026.**
 
@@ -39,6 +37,12 @@ STATUS_DESCRIPTION = """
 |✅| Confirmed|
 
 
+"""
+
+PUBLISHER_LEADIN = """
+
+#### Publisher Detatils
+Exact discount / waiver details are outlined here.
 
 
 """
@@ -205,6 +209,7 @@ if event.selection.rows:
 with st.expander("Status Description"):
 	st.markdown(STATUS_DESCRIPTION)
 with st.expander("Publisher Details"):
+	st.markdown(PUBLISHER_LEADIN)
 	st.table(pub_DF[["Publisher Description","Discount"]])
 with st.expander("'The system is obviously bonkers'"):
 	st.markdown(APC_LINK)
