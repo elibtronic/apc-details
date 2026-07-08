@@ -63,23 +63,31 @@ This video will explain how the platform works and a quick look at how to run it
 - _Publisher_ - should be spelt exactly how it is written on _publisherInfo_, this is the match point
 - _Journal\_Title_
 - _ISSN_
-- _Verified_ - Set this to `1` if you know for a fact this title is covered under you APC agreement, `0` otherwise.
+- _Verified_ - Set this to `1` if you know for a fact this title is covered under you APC agreement, `2` if you know for sure the discount does not apply, and `0` if you are unsure.
 
 When set, **Publish to the Web** -> just this tab -> as CSV -> Make a note of the URL
 
 
 #### A note about the Verified column!
-Sometimes you'll get title lists from a publisher that cover all of their titles, not just ones you know you have APC waiver or discounts for. For the titles from a publisher you are absolutely sure are covered in your deal use the value `1` in that column. For a title that are not confident is included in your deal, use the value `0`. When the system presents a **verfied** title it will show you exactly what the publisher agreement is. For titles that are not **verified** you'll see a message of what the publisher deal usually is, along with OpenAlex data and an encouragement to double check. Alas, if only this information was always correct. Some examples:
+Sometimes you'll get title lists from a publisher that cover all of their titles, not just ones you know you have APC waiver or discounts for. 
+
+- For the titles that you are unsure of use the value `0`
+- For the titles from a publisher you are absolutely sure are covered in your deal use the value `1` in that column. 
+- For titles that are you confident are not included in your deal, use the value `2`. 
+
+The system will use this information when showing journal details. Here are some examples (be forewarned, I'm working on this so these might be 100% accurate):
 
 
-_When confident in the title_
-![verified title](readme_images/lookup_verified.png)
+_Yes, title is covered_
+![covered title](readme_images/lookup_yes.png)
 
 
+_Unsure_
+![not verified title](readme_images/lookup_unsure.png)
 
-_Not so much_
-![not verified title](readme_images/lookup_not_verified.png)
 
+_No, title is not covered_
+![not verified title](readme_images/lookup_no.png)
 
 
 #### publisherInfo Tab
@@ -136,6 +144,9 @@ GH Will allow you to host all of your app code so that it can be deployed to the
 |ISSN_ENTRY | The entry value for the ISSN field from the Forms step |
 |PUBLISHER_ENTRY | The entry value for the PUBLISHER field from the Forms step |
 |PREAMBLE | Whatever lead-in text you'd like at the top of the app, you can use [markdown](https://www.markdownguide.org/) here|
+|STATUS_DESCRIPTION| Text to explain the status icons |
+|PUBLISHER_LEADIN| Text to introduce the publisher information table |
+|APC_INFO| Text of 'more information' expander |
 |HELP_MESSAGE| Whatever text you'd like at the bottom of the app, you can use [markdown](https://www.markdownguide.org/) here|
 |LOGGING | Set this to `True` if you want the app to log to the Google Form. You can set this to `False` if you don't want to do this. (You might want to shut this off for example while you are testing your setup or modifying the app.) |
 |IMAGE_PATH | The path to your image file if you want to have it named something else for example. It defaults to `images/logo.png` and is set for a size of 200px |
