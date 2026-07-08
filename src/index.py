@@ -41,7 +41,7 @@ STATUS_DESCRIPTION = """
 
 PUBLISHER_LEADIN = """
 
-#### Publisher Detatils
+#### Publisher Details
 Exact discount / waiver details are outlined here.
 
 
