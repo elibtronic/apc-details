@@ -24,7 +24,13 @@ Below are details about what Article Processing Charge (APC) discounts and waive
 
 :dart: _Title lists are built using  ULRICHs data [:link:](https://ulrichsweb.serialssolutions.com/login). Every effort has been made to ensure data is correct._
 
- :spiral_calendar: **Information Last Updated - July, 2, 2026.**
+ :spiral_calendar: **Information Last Updated - July 8, 2026.**
+
+
+"""
+
+
+STATUS_DESCRIPTION = """
 
 |Status|APC Discount/Waiver?|
 |--|--|
@@ -140,6 +146,9 @@ st.image(IMAGE_PATH,width=200)
 st.write(PREAMBLE)
 
 
+
+st.markdown(":red[Search and browse by title and publisher]:")
+
 pubSelect = st.selectbox(label="Select a publisher to narrow", index=None, options=combined_DF["Publisher"].sort_values(ascending=True).unique())
 
 
@@ -193,9 +202,10 @@ if event.selection.rows:
 
 #with pubTab:
 
+with st.expander("Status Description"):
+	st.markdown(STATUS_DESCRIPTION)
 with st.expander("Publisher Details"):
 	st.table(pub_DF[["Publisher Description","Discount"]])
-
 with st.expander("'The system is obviously bonkers'"):
 	st.markdown(APC_LINK)
 
