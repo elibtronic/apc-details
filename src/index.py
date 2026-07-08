@@ -26,15 +26,27 @@ Below are details about what Article Processing Charge (APC) discounts and waive
 
  :spiral_calendar: **Information Last Updated - July, 2, 2026.**
 
-|Status|APC Discount?|
+|Status|APC Discount/Waiver?|
 |--|--|
+|⛔| None available|
 |❓| Please check|
-|✅| Verified|
+|✅| Confirmed|
 
 
 
 
 """
+
+
+APC_LINK  = """
+
+Interested in learning more about APCs❓
+
+Cantrell MH, Caldwell R, Mezick JA, Estill M, Collister LB (2026) “The system is obviously bonkers”: The APC Trap and the bind of scholarly publishing across four research intensive institutions in the U.S.. _PLOS ONE_ 21(7): e0351430. [https://doi.org/10.1371/journal.pone.0351430](https://doi.org/10.1371/journal.pone.0351430)
+
+
+"""
+
 
 HELP_MESSAGE = """
 
@@ -51,6 +63,7 @@ IMAGE_PATH = "images/logo.png" #Put your logo in the images folder, renamed to l
 verify_map = {
 	0 : "❓",
 	1 : "✅",
+	2 : "⛔",
 }
 
 
@@ -82,12 +95,17 @@ def get_openalex_journal(issn,verified):
 
     try:
         j_item = requests.get("https://api.openalex.org/sources/issn:"+issn).json()
-
-        if verified != 1:
+        #will need to fix if adding in a third
+        if verified == 0:
 	        if not j_item['is_oa']:
 	            detail_string += " - Title is not considered _Open Access_ and  may be eligible for discount. :arrow_right: Please check _Publisher Discount_ for specifications and see [journal homepage]("+j_item['homepage_url']+") to ensure discount applies."
 	        else: 
 	            detail_string += " - Title is considered _Open Access_ or _Hybrid_ and may be eligible for disount. :arrow_right: Please check _Publisher Discount_ for specifications and see [journal homepage]("+j_item['homepage_url']+") to ensure discount applies."
+        elif verified == 1:
+        	detail_string += " Usual publisher discount applies"
+        else:
+        	detail_string += " Discount does not apply to this title"
+
 
         if j_item["apc_usd"]: 
             detail_string += "\n - Usual Article Processing Charge for this title is: **"+str(j_item["apc_usd"])+"** USD"
@@ -155,11 +173,14 @@ if event.selection.rows:
 	"Publisher Discount": infoshow.iloc[event.selection.rows[0]]["Publisher Discount"]
 	}
 
-	if j_details["Verified"]:
-		st.success("APC discount details found!",icon="📕")
-	else:
-		st.error("APC discount unclear or does not apply to this title, please verify!",icon="📕")
 
+	if j_details["Verified"] == 0:
+		st.warning("Discount / waiver unclear, plase verify!", icon="📕")
+	elif j_details["Verified"] == 1:
+		st.success("APC discount details found!",icon="📕")
+	elif j_details["Verified"] == 2:
+		st.error("Discount/waiver does not apply to this title!",icon="📕")
+	
 	j_details["Additional Information"] = get_openalex_journal(j_details["ISSN"],j_details["Verified"])
 	del j_details["Verified"] #comment back out for diagnostic info
 
@@ -174,6 +195,9 @@ if event.selection.rows:
 
 with st.expander("Publisher Details"):
 	st.table(pub_DF[["Publisher Description","Discount"]])
+
+with st.expander("'The system is obviously bonkers'"):
+	st.markdown(APC_LINK)
 
 st.write(HELP_MESSAGE)
 
