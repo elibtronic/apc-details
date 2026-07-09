@@ -211,7 +211,7 @@ with st.expander("Status Description"):
 with st.expander("Publisher Details"):
 	st.markdown(PUBLISHER_LEADIN)
 	st.table(pub_DF[["Publisher Description","Discount"]])
-with st.expander("'The system is obviously bonkers'"):
+with st.expander("More information about APCs"):
 	st.markdown(APC_LINK)
 
 st.write(HELP_MESSAGE)
