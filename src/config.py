@@ -55,7 +55,7 @@ Cantrell MH, Caldwell R, Mezick JA, Estill M, Collister LB (2026) “The system 
 HELP_MESSAGE = """
 
 
-_Need more help:question: Contact the library
+_Need more help:question: Contact the library [:mailbox:]
 
 """
 
