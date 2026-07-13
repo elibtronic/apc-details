@@ -20,7 +20,7 @@ A list of journals and publishers is presented to the end user. The user can cli
 Check out Brock Library's instance of the app: [https://brock-apc-info.streamlit.app/](https://brock-apc-info.streamlit.app/) to see it in action.
 
 
-The design philsophy for this platform is very much inspiried by Collection Builder, particularly [CB-Sheets](https://collectionbuilder.github.io/sheets/). You can run the whole thing without installing anythin on you local machine. Data goes in a Google Sheet, the app is deployed to Streamlit Cloud. Easy, peasy.
+The design philsophy for this platform is very much inspiried by Collection Builder, particularly [CB-Sheets](https://collectionbuilder.github.io/sheets/). You can run the whole thing without installing anything on you local machine. Data goes in a Google Sheet, the app is deployed to Streamlit Cloud. Easy, peasy.
 
 
 This video will explain how the platform works and a quick look at how to run it yourself.
@@ -134,7 +134,7 @@ The three values are:
 GH Will allow you to host all of your app code so that it can be deployed to the Streamlit service.
 
 - Clone the repository
-- Modify `src/index.py` to change the few variables at the top of the file.
+- Modify `src/config.py` to change the few variables at the top of the file.
 
 |Variable| Purpose
 |----|-----|
