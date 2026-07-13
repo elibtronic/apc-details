@@ -158,6 +158,18 @@ GH Will allow you to host all of your app code so that it can be deployed to the
 - Connect to Github
 - find the url of your forked repository
 
+## Upgrading apc-details
+
+First make a back-up copy of `src/config.py` by copying it somewhere safe.
+
+### Web only
+If you just use github in the web interface you should probably just clone the repository fresh. Add your values into `src/config.py` from your back-up copy of the file and go through the _Deploy to Streamlit Cloud_ section with your new repository.
+
+
+### Using Github Desktop or GitHub CLI
+git `pull` the new version of the repository. Add your values into `src/config.py` from your back-up copy of the file. git `commit` then `push` as usual and your app should restart
+
+
 
 ## Tweak it more? (Optional) (To still be completed)
 
