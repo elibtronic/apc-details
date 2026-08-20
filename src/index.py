@@ -1,8 +1,8 @@
 import streamlit as st
 import requests
 import pandas as pd
-import config_brock as config
-# ^ hacky bodge for local development
+import config
+
 
 
 #### Functions need to manipulate data
