@@ -15,7 +15,7 @@ def get_data(JOURNAL_URL, PUB_URL):
         1 : "✅",
         2 : "⛔",
     }
-
+    
 	#combined data
     journalDF = pd.read_csv(JOURNAL_URL)
     pub_DF = pd.read_csv(PUB_URL)
@@ -24,14 +24,14 @@ def get_data(JOURNAL_URL, PUB_URL):
     pub_DF["Publisher Description"] = "**"+pub_DF["Publisher"] + "** [:link:](" + pub_DF["pubUrl"]+")"
     del pub_DF["pubUrl"]
     pub_DF.columns = ["Publisher","Discount","Publisher Description"]
-    combined_DF.columns = ["Publisher","Title","ISSN","Verified","Publisher URL","Publisher Discount"]
+    combined_DF.columns = ["Publisher","Title","ISSN","Verified","Type","Publisher URL","Publisher Discount"]
     combined_DF.sort_values(by=['Title','Publisher'], inplace=True, key=lambda col: col.str.lower() )
     combined_DF.dropna(subset=["Title","ISSN"],inplace=True)
     combined_DF["Status"] = combined_DF["Verified"].map(verify_map)
     return combined_DF, pub_DF
 
 
-def get_openalex_journal(issn,verified):
+def get_journal_details(issn,verified,type):
 
     detail_string = ""
 
@@ -39,25 +39,33 @@ def get_openalex_journal(issn,verified):
         issn = issn[0:4]+"-"+issn[4:]
 
     try:
-        j_item = requests.get("https://api.openalex.org/sources/issn:"+issn).json()
-        #will need to fix if adding in a third
-        if verified == 0:
-	        if not j_item['is_oa']:
-	            detail_string += " - Title is not considered _Open Access_ and  may be eligible for discount. :arrow_right: Please check _Publisher Discount_ for specifications and see [journal homepage]("+j_item['homepage_url']+") to ensure discount applies."
-	        else: 
-	            detail_string += " - Title is considered _Open Access_ or _Hybrid_ and may be eligible for disount. :arrow_right: Please check _Publisher Discount_ for specifications and see [journal homepage]("+j_item['homepage_url']+") to ensure discount applies."
-        elif verified == 1:
-        	detail_string += " Usual publisher discount applies"
-        else:
-        	detail_string += " Discount does not apply to this title"
+        oalex_item = requests.get("https://api.openalex.org/sources/issn:"+issn).json()
 
-
-        if j_item["apc_usd"]: 
-            detail_string += "\n - Usual Article Processing Charge for this title is: **"+str(j_item["apc_usd"])+"** USD"
-
-        detail_string += "\n - More analytics for this title from [OpenAlex]("+j_item['ids']['openalex']+")"
     except:
-        detail_string = "**Could not retrieve extra journal information**"
+    	detail_string = "**Could not retrieve extra journal information**"
+    	return detail_string
+    
+
+    #unknown status
+    if verified == 0:
+    	detail_string += "❓ Exact discount status of title is unclear! Please see [journal homepage]("+oalex_item['homepage_url']+") to make sure journal matches the _Publisher Discount_.\n\n"
+    	
+    	if not oalex_item['is_oa']:
+    		detail_string += "\n\n :arrow_right: OpenAlex thinks this title is Open Access."
+    	else:
+    		detail_string += "\n\n :arrow_right: OpenAlex does not think this title is Open Access."
+
+    #verified, accurate, affirmative
+    elif verified == 1:
+    	detail_string += "✅ Usual publisher discount applies\n\n"
+    #verfied, accurate, negative
+    elif verified == 2:
+    	detail_string += "⛔ Discount does not apply to this title\n\n"
+    if oalex_item["apc_usd"]: 
+        detail_string += "\n\n :arrow_right: Usual Article Processing Charge for this title is: **"+str(oalex_item["apc_usd"])+"** USD"
+
+    detail_string += "\n\n  :arrow_right: More analytics for this title from [OpenAlex]("+oalex_item['ids']['openalex']+")"
+        
     return detail_string
 
 
@@ -87,7 +95,7 @@ st.write(config.PREAMBLE)
 tab_home, tab_pub, tab_help = st.tabs(["Journal Info","Publisher Info", "Help"])
 
 with tab_home:
-	st.markdown(":red[Search and browse by title and publisher]:")
+	st.markdown("#### Search By Journal")
 	pubSelect = st.selectbox(label="Select a publisher to narrow", index=None, options=combined_DF["Publisher"].sort_values(ascending=True).unique())
 	
 	
@@ -97,9 +105,10 @@ with tab_home:
 		st.info(pub_details,title="Publisher Information",icon="📕")
 		if config.LOGGING:
 			log_apc_use(config.ISSN_ENTRY, config.PUBLISHER_ENTRY, config.L_URL,publisher=pubSelect)
-	
+
 		st.write("_Select a journal title from this publisher for more information_")
 		st.write("_Click in box below, then Ctrl+F / ⌘+F to search_ ")
+	
 		event = st.dataframe(infoshow[["Title","ISSN","Status"]],on_select="rerun",selection_mode="single-row",hide_index=True)
 		#st.dataframe(infoshow[["Title","ISSN"]],hide_index=True)
 		st.write("Total titles for this publisher: ",len(infoshow))
@@ -109,6 +118,9 @@ with tab_home:
 		event = st.dataframe(infoshow[["Title","ISSN","Publisher","Status"]],on_select="rerun",selection_mode="single-row",hide_index=True)
 		st.write("Total titles for all publishers: ",len(infoshow))
 	
+	with st.expander("What if my title isn't listed here?"):
+		st.write(config.MISSING_TITLE)
+	
 	if event.selection.rows:
 	
 		j_details = {
@@ -116,7 +128,8 @@ with tab_home:
 		"Title": infoshow.iloc[event.selection.rows[0]]["Title"],
 		"Status": infoshow.iloc[event.selection.rows[0]]["Status"],
 		"ISSN" : infoshow.iloc[event.selection.rows[0]]["ISSN"],
-		"Publisher": infoshow.iloc[event.selection.rows[0]]["Publisher"],
+		"Publisher": infoshow.iloc[event.selection.rows[0]]["Publisher"], 
+		"Journal Type": infoshow.iloc[event.selection.rows[0]]["Type"],
 		"Verified": infoshow.iloc[event.selection.rows[0]]["Verified"],
 		"Publisher Discount": infoshow.iloc[event.selection.rows[0]]["Publisher Discount"]
 		}
@@ -129,17 +142,17 @@ with tab_home:
 		elif j_details["Verified"] == 2:
 			st.error("Discount/waiver does not apply to this title!",icon="📕")
 		
-		j_details["Additional Information"] = get_openalex_journal(j_details["ISSN"],j_details["Verified"])
+		j_details["Additional Information"] = get_journal_details(j_details["ISSN"],j_details["Verified"],j_details["Journal Type"])
 		del j_details["Verified"] #comment back out for diagnostic info
 	
 		if config.LOGGING:
 			log_apc_use(config.ISSN_ENTRY, config.PUBLISHER_ENTRY, config.L_URL,issn=j_details["ISSN"])
 	
 	
-	
+		
 		st.table(j_details)
 
-#with pubTab:
+
 with tab_pub:
 	st.markdown(config.PUBLISHER_LEADIN)
 	st.table(pub_DF[["Publisher Description","Discount"]])
