@@ -119,7 +119,7 @@ with tab_home:
 		st.write("Total titles for all publishers: ",len(infoshow))
 	
 	with st.expander("What if my title isn't listed here?"):
-		st.write(config.MISSING_TITLE)
+		st.write(config.MISSING_TITLE_HELP)
 	
 	if event.selection.rows:
 	
