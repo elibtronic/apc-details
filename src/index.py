@@ -79,71 +79,77 @@ def log_apc_use(ISSN_ENTRY, PUBLISHER_ENTRY, L_URL,issn="",publisher=""):
 combined_DF, pub_DF = get_data(config.JOURNAL_URL,config.PUB_URL)
 
 
+
 #### Render Page
 st.image(config.IMAGE_PATH,width=200)
 st.write(config.PREAMBLE)
-st.markdown(":red[Search and browse by title and publisher]:")
 
-pubSelect = st.selectbox(label="Select a publisher to narrow", index=None, options=combined_DF["Publisher"].sort_values(ascending=True).unique())
+tab_home, tab_pub, tab_help = st.tabs(["Journal Info","Publisher Info", "Help"])
 
-
-if pubSelect:
-	infoshow = combined_DF[combined_DF["Publisher"] == pubSelect]
-	pub_details = pub_DF[pub_DF["Publisher"] == pubSelect]["Discount"].iloc[0]
-	st.info(pub_details,title="Publisher Information",icon="📕")
-	if config.LOGGING:
-		log_apc_use(config.ISSN_ENTRY, config.PUBLISHER_ENTRY, config.L_URL,publisher=pubSelect)
-
-	st.write("_Select a journal title from this publisher for more information_")
-	st.write("_Click in box below, then Ctrl+F / ⌘+F to search_ ")
-	event = st.dataframe(infoshow[["Title","ISSN","Status"]],on_select="rerun",selection_mode="single-row",hide_index=True)
-	#st.dataframe(infoshow[["Title","ISSN"]],hide_index=True)
-	st.write("Total titles for this publisher: ",len(infoshow))
-else:
-	infoshow = combined_DF
-	st.write("_Click in box below, then Ctrl+F / ⌘+F to search_ ")
-	event = st.dataframe(infoshow[["Title","ISSN","Publisher","Status"]],on_select="rerun",selection_mode="single-row",hide_index=True)
-	st.write("Total titles for all publishers: ",len(infoshow))
-
-if event.selection.rows:
-
-	j_details = {
-
-	"Title": infoshow.iloc[event.selection.rows[0]]["Title"],
-	"Status": infoshow.iloc[event.selection.rows[0]]["Status"],
-	"ISSN" : infoshow.iloc[event.selection.rows[0]]["ISSN"],
-	"Publisher": infoshow.iloc[event.selection.rows[0]]["Publisher"],
-	"Verified": infoshow.iloc[event.selection.rows[0]]["Verified"],
-	"Publisher Discount": infoshow.iloc[event.selection.rows[0]]["Publisher Discount"]
-	}
-
-
-	if j_details["Verified"] == 0:
-		st.warning("Discount / waiver unclear, plase verify!", icon="📕")
-	elif j_details["Verified"] == 1:
-		st.success("APC discount details found!",icon="📕")
-	elif j_details["Verified"] == 2:
-		st.error("Discount/waiver does not apply to this title!",icon="📕")
+with tab_home:
+	st.markdown(":red[Search and browse by title and publisher]:")
+	pubSelect = st.selectbox(label="Select a publisher to narrow", index=None, options=combined_DF["Publisher"].sort_values(ascending=True).unique())
 	
-	j_details["Additional Information"] = get_openalex_journal(j_details["ISSN"],j_details["Verified"])
-	del j_details["Verified"] #comment back out for diagnostic info
-
-	if config.LOGGING:
-		log_apc_use(config.ISSN_ENTRY, config.PUBLISHER_ENTRY, config.L_URL,issn=j_details["ISSN"])
-
-
-
-	st.table(j_details)
+	
+	if pubSelect:
+		infoshow = combined_DF[combined_DF["Publisher"] == pubSelect]
+		pub_details = pub_DF[pub_DF["Publisher"] == pubSelect]["Discount"].iloc[0]
+		st.info(pub_details,title="Publisher Information",icon="📕")
+		if config.LOGGING:
+			log_apc_use(config.ISSN_ENTRY, config.PUBLISHER_ENTRY, config.L_URL,publisher=pubSelect)
+	
+		st.write("_Select a journal title from this publisher for more information_")
+		st.write("_Click in box below, then Ctrl+F / ⌘+F to search_ ")
+		event = st.dataframe(infoshow[["Title","ISSN","Status"]],on_select="rerun",selection_mode="single-row",hide_index=True)
+		#st.dataframe(infoshow[["Title","ISSN"]],hide_index=True)
+		st.write("Total titles for this publisher: ",len(infoshow))
+	else:
+		infoshow = combined_DF
+		st.write("_Click in box below, then Ctrl+F / ⌘+F to search_ ")
+		event = st.dataframe(infoshow[["Title","ISSN","Publisher","Status"]],on_select="rerun",selection_mode="single-row",hide_index=True)
+		st.write("Total titles for all publishers: ",len(infoshow))
+	
+	if event.selection.rows:
+	
+		j_details = {
+	
+		"Title": infoshow.iloc[event.selection.rows[0]]["Title"],
+		"Status": infoshow.iloc[event.selection.rows[0]]["Status"],
+		"ISSN" : infoshow.iloc[event.selection.rows[0]]["ISSN"],
+		"Publisher": infoshow.iloc[event.selection.rows[0]]["Publisher"],
+		"Verified": infoshow.iloc[event.selection.rows[0]]["Verified"],
+		"Publisher Discount": infoshow.iloc[event.selection.rows[0]]["Publisher Discount"]
+		}
+	
+	
+		if j_details["Verified"] == 0:
+			st.warning("Discount / waiver unclear, plase verify!", icon="📕")
+		elif j_details["Verified"] == 1:
+			st.success("APC discount details found!",icon="📕")
+		elif j_details["Verified"] == 2:
+			st.error("Discount/waiver does not apply to this title!",icon="📕")
+		
+		j_details["Additional Information"] = get_openalex_journal(j_details["ISSN"],j_details["Verified"])
+		del j_details["Verified"] #comment back out for diagnostic info
+	
+		if config.LOGGING:
+			log_apc_use(config.ISSN_ENTRY, config.PUBLISHER_ENTRY, config.L_URL,issn=j_details["ISSN"])
+	
+	
+	
+		st.table(j_details)
 
 #with pubTab:
-
-with st.expander("Status Description"):
-	st.markdown(config.STATUS_DESCRIPTION)
-with st.expander("All Publisher Details"):
+with tab_pub:
 	st.markdown(config.PUBLISHER_LEADIN)
 	st.table(pub_DF[["Publisher Description","Discount"]])
-with st.expander("More information about APCs"):
-	st.markdown(config.APC_LINK)
+
+with tab_help:
+	with st.expander("Status Description"):
+		st.markdown(config.STATUS_DESCRIPTION)
+	
+	with st.expander("More information about APCs"):
+		st.markdown(config.APC_LINK)
 
 st.write(config.HELP_MESSAGE)
 
