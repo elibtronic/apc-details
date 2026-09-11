@@ -114,7 +114,7 @@ with tab_home:
 		st.write("Total titles for this publisher: ",len(infoshow))
 	else:
 		infoshow = combined_DF
-		st.write("_Click in box below, then Ctrl+F / ⌘+F to search_ ")
+		st.write("_To search for a journal title click in box below, then Ctrl+F / ⌘+F to open search box_ ")
 		event = st.dataframe(infoshow[["Title","ISSN","Publisher","Status"]],on_select="rerun",selection_mode="single-row",hide_index=True)
 		st.write("Total titles for all publishers: ",len(infoshow))
 	

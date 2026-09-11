@@ -131,8 +131,25 @@ Make a note of three values:
 
 Streamlit can look directly at a GitHub repository to deploy an app. You’ll need to have an Streamlit Cloud account, as well as a GitHub account. You’ll close the repository, configure your app in your repository, and finally tell Streamlit to deploy your app
 
-- Clone the repository
-- Modify `src/config.py` to change the few variables at the top of the file.
+- _Fork_ the repository. Click the fork button
+
+![GH step 1](readme_images/gh_step_1.png)
+
+- Change the owner to your account and change the repository name to something different, like `name-of-school-apc-details` and change the description, click create fork when you are ready.
+
+![GH step 2](readme_images/gh_step_2.png)
+
+- Navigate to the config file by clicking on `src` in the main list of files, then click on `config.py`
+  
+![GH step 3](readme_images/gh_step_3.png)
+
+![GH step 4](readme_images/gh_step_4.png)
+
+- Click the pencil icon to edit your file
+
+![GH Step 5](readme_images/gh_step_5.png)
+
+- Use the built in text editor to fill in the following variables
 
 |Variable| Purpose
 |----|-----|
@@ -144,17 +161,49 @@ Streamlit can look directly at a GitHub repository to deploy an app. You’ll ne
 |PREAMBLE | Whatever lead-in text you'd like at the top of the app, you can use [markdown](https://www.markdownguide.org/) here|
 |STATUS_DESCRIPTION| Text to explain the status icons |
 |PUBLISHER_LEADIN| Text to introduce the publisher information table |
-|APC_INFO| Text of 'more information' expander |
+|APC_INFO| Text of ‘More information about APCs’ expander on the **Help** tab |
 |HELP_MESSAGE| Whatever text you'd like at the bottom of the app, you can use [markdown](https://www.markdownguide.org/) here|
+|MISSING_TITLE_HELP |Text to display in the ‘What if my title isn’t listed here?’ expander on the underneath the pick list. |
+|HELP_MESSAGE|Tex to display right underneath the pick list. |
 |LOGGING | Set this to `True` if you want the app to log to the Google Form. You can set this to `False` if you don't want to do this. (You might want to shut this off for example while you are testing your setup or modifying the app.) |
 |IMAGE_PATH | The path to your image file if you want to have it named something else for example. It defaults to `images/logo.png` and is set for a size of 200px |
 
-### Deploy to Streamlit Cloud (To still be completed)
 
-- Head to [Streamlit cloud]()
-- New app
-- Connect to Github
-- find the url of your forked repository
+- Once done, click **Commit Changes** in the top
+
+![GH Step 6](readme_images/gh_step_6.png)
+
+- Add in a meaningful message and description and click **Commit Changes**
+
+![GH Step 7](readme_images/gh_step_7.png)
+
+### Deploy to Streamlit Cloud
+
+- Head to [Streamlit cloud](https://streamlit.io/cloud) and click **Free** in the deploying button along the top
+
+![Streamlit Step 1](readme_images/sl_step_1.png)
+
+- Continue to sign-in and create your account
+
+![Streamlit Step 2](readme_images/sl_step_2.png)
+
+- Once logged in look for the Create app button
+
+![Streamlit Step 3](readme_images/sl_step_3.png)
+
+- Deploy a public app from Github
+
+![Streamlit Step 4](readme_images/sl_step_4.png)
+
+- Fill in the details and click Deploy
+- You’ll need to paste in your GitHub Repository URL
+- Change Main file path to `src/index.py`
+- Give it a good url in the App URL field
+
+
+![Streamlit Step 5](readme_images/sl_step_5.png)
+
+Give it a moment and head over to your URL of your app!
 
 ## Upgrading and modifying apc-details
 
