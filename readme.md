@@ -34,17 +34,15 @@ This video will explain how the platform works and a quick look at how to run it
 
 ## In short
 
-- To present the data you create a Google Sheet 
- - with a tab for you publisher details
- - with a tab for the mapping between publisher & journal title / issn & a verified boolean
+- You create a Google Sheet, with two tabs outlining publisher and title information (described next)
 
-- To log usage you create a Google Form, with two text fields: ISSN & Publisher
+- To log usage you create a Google Form and make note of some values
 
+- You _clone_ the github repository
 
-- You _clone_ the github repository, modify some values & and add your own logo
+- You add your details into a config file, upload a new logo image
 
-
-- You create an app on streamlit cloud with your completed GitHub repository
+- You create an app on Streamlit cloud with your completed GitHub repository
 
 
 ## Setting up your own
@@ -61,11 +59,12 @@ This video will explain how the platform works and a quick look at how to run it
 ![Sheets info for Journal](readme_images/sheets_ji.png)
 
 - _Publisher_ - should be spelt exactly how it is written on _publisherInfo_, this is the match point
-- _Journal\_Title_
-- _ISSN_
+- _Journal\_Title_ - The title the way you want it presented to the end user
+- _ISSN_ - The eISSN is preferred but the API calls this is used for should work with either.
 - _Verified_ - Set this to `1` if you know for a fact this title is covered under you APC agreement, `2` if you know for sure the discount does not apply, and `0` if you are unsure.
+- _Type_ - A text description of what type of journal this title is. Eg. `Hybrid`, `Gold` etc.
 
-When set, **Publish to the Web** -> just this tab -> as CSV -> Make a note of the URL
+When set, _File -> Share -> Publish to Web -> just this tab -> as CSV_ Make a note of the URL
 
 
 #### A note about the Verified column!
@@ -75,38 +74,37 @@ Sometimes you'll get title lists from a publisher that cover all of their titles
 - For the titles from a publisher you are absolutely sure are covered in your deal use the value `1` in that column. 
 - For titles that are you confident are not included in your deal, use the value `2`. 
 
-The system will use this information when showing journal details. Here are some examples (be forewarned, I'm working on this so these might be 100% accurate):
+When you are looking at an actual journal title there will be a colour banner indicated this status, along with some additional diagnostic information.
 
 
-_Yes, title is covered_
 ![covered title](readme_images/lookup_yes.png)
 
-
-_Unsure_
 ![not verified title](readme_images/lookup_unsure.png)
 
-
-_No, title is not covered_
 ![not verified title](readme_images/lookup_no.png)
 
+#### A note about the Type column
+The information here is used in the presentation of information to the end user. For example if the title is **Hybrid** you can add it here, so when the users sees the publisher discount description they can match it against the **Hybrid** label. This column value can also be empty if you don’t know the status. The imagine below shows and example of this.
+
+![specific journal displayed](readme_images/)
 
 #### publisherInfo Tab
 
-![Sheets info for Journal](readme_images/sheets_pi.png)
+![Sheets info for Publisher](readme_images/sheets_pi.png)
 
 - _Publisher_ - should be spelt exactly how it is written on _journalInfo_, this is the match point
 - _pubURL_ - URL of the homepage of the publisher
 - _pubDiscount_ - Description of the discount / waiver, you can use [markdown](https://www.markdownguide.org/) here
 
-When set, **Publish to the Web** -> just this tab -> as CSV -> Make a note of the URL
+When set, _File -> Share -> Publish to Web -> just this tab -> as CSV_ Make a note of the URL
 
 ### Google Form
 
-The platform will log to a Google Form everytime someone looks up more information about an ISSN, or when someone wants to look up more details on a publisher. To set that up you need to create the form with two short text fields like in the picture.
+The platform will log every time someone looks up more information about an ISSN, or publisher. This is kept in a Google Sheet that is a response to a Google Form. To set that up you need to create the form with two short text fields like in the picture.
 
 ![Google Form Setup](readme_images/forms_survey.png)
 
-You should probably have the form add results to a Google Sheet so you can look line by line. Once this form is setup, you need to determine 3 things. The URL of the form, and the two entry 'keys' that the form uses.
+You need to have the form add results to a Google Sheet so you can look line by line. Once this form is setup, you need to determine 3 things. The URL of the form, and the two entry 'keys' that the form uses.
 
 Under the 3 dot menu is 'Pre-fill' form.
 
@@ -121,7 +119,7 @@ You'll get something along the lines of the following:
 ```
 https://docs.google.com/forms/d/e/1FAIpQLSe61TNpD96WMGonWeV-w0nkvQjGRCfKaB6qsFmzQQXXXXXXXX/viewform?usp=pp_url&entry.192508000=XXXX-YYYY&entry.789120000=Cool+Guy+publishing
 ```
-The three values are:
+Make a note of three values:
 
 - form url, the part up to the `/` before the viewform. eg. `https://docs.google.com/forms/d/e/1FAIpQLSe61TNpD96WMGonWeV-w0nkvQjGRCfKaB6qsFmzQQXXXXXXXX`
 - the entry value for the ISSN field eg. `entry.192508000`
@@ -129,9 +127,9 @@ The three values are:
 
 
 
-### Github (To still be completed)
+### Github (Under construction)
 
-GH Will allow you to host all of your app code so that it can be deployed to the Streamlit service.
+Streamlit can look directly at a GitHub repository to deploy an app. You’ll need to have an Streamlit Cloud account, as well as a GitHub account. You’ll close the repository, configure your app in your repository, and finally tell Streamlit to deploy your app
 
 - Clone the repository
 - Modify `src/config.py` to change the few variables at the top of the file.
@@ -158,7 +156,7 @@ GH Will allow you to host all of your app code so that it can be deployed to the
 - Connect to Github
 - find the url of your forked repository
 
-## Upgrading apc-details
+## Upgrading and modifying apc-details
 
 First make a back-up copy of `src/config.py` by copying it somewhere safe.
 
@@ -171,15 +169,18 @@ git `pull` the new version of the repository. Add your values into `src/config.p
 
 
 
-## Tweak it more? (Optional) (To still be completed)
+## Tweak it more? (Optional)
 
-You can do everything you need to do run an instance of this without installing anything and just by visiting a few sites and setting up accounts. You can of course clone the repository, [install steamlit](https://docs.streamlit.io/get-started/installation) and modfiy things even more. Here's the general steps to get your local setup going.
+You can do everything you need to do run an instance of this without installing anything and just by visiting a few sites and setting up accounts. You can of course clone the repository, [install steamlit](https://docs.streamlit.io/get-started/installation) and modfiy things even more of you are comfortable with programming in Python. 
 
+Here's the general steps to get your local setup going. (Using SSH for git)
 ```
-git pull <GH URL>
+git clone git@github.com:elibtronic/apc-details.git
 cd apc-details
 source .venv/bin/activate
 streamlit run src/index.py
 ```
 
-Then edit `index.py` in a text editor of your choice. Streamlit should automatically render your changed app on the machine you are running it on. To update your app, simply push your changes to GitHub.
+Then edit `index.py` in a text editor of your choice. Streamlit should automatically render your changed app on the machine, available via [https://localhost:8501](https://localhost:8501)
+
+To update your app, simply push your changes to GitHub. If you add in some fun additional feature please submit a Pull Request.
