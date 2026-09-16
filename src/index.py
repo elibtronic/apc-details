@@ -163,6 +163,14 @@ with tab_help:
 	
 	with st.expander("More information about APCs"):
 		st.markdown(config.APC_LINK)
+		
+	st.download_button(
+	label = "Download the APC data",
+	data = pub_DF.to_csv().encode("utf-8"),
+	file_name = "apc_details",
+	mime = "text/csv",
+	icon = ":material/download:"
+	)
 
 st.write(config.HELP_MESSAGE)
 
