@@ -166,7 +166,7 @@ with tab_help:
 		
 	st.download_button(
 	label = "Download the APC data",
-	data = pub_DF.to_csv().encode("utf-8"),
+	data = combined_DF.to_csv().encode("utf-8"),
 	file_name = "apc_details",
 	mime = "text/csv",
 	icon = ":material/download:"
