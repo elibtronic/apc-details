@@ -59,7 +59,7 @@ Cloud. Easy, peasy.</p>
 <p>This video will explain how the platform works and a quick look at
 how to run it yourself.</p>
 <hr />
-<p>📀 VIDEO DEMO 📀</p>
+<p>📀 VIDEO DEMO COMING SOON 📀</p>
 <hr />
 <h2 id="in-short">In short</h2>
 <ul>
@@ -196,9 +196,42 @@ You’ll need to have an Streamlit Cloud account, as well as a GitHub
 account. You’ll close the repository, configure your app in your
 repository, and finally tell Streamlit to deploy your app</p>
 <ul>
-<li>Clone the repository</li>
-<li>Modify <code>src/config.py</code> to change the few variables at the
-top of the file.</li>
+<li><em>Fork</em> the repository. Click the fork button</li>
+</ul>
+<figure>
+<img src="readme_images/gh_step_1.png" alt="GH step 1" />
+<figcaption aria-hidden="true">GH step 1</figcaption>
+</figure>
+<ul>
+<li>Change the owner to your account and change the repository name to
+something different, like <code>name-of-school-apc-details</code> and
+change the description, click create fork when you are ready.</li>
+</ul>
+<figure>
+<img src="readme_images/gh_step_2.png" alt="GH step 2" />
+<figcaption aria-hidden="true">GH step 2</figcaption>
+</figure>
+<ul>
+<li>Navigate to the config file by clicking on <code>src</code> in the
+main list of files, then click on <code>config.py</code></li>
+</ul>
+<figure>
+<img src="readme_images/gh_step_3.png" alt="GH step 3" />
+<figcaption aria-hidden="true">GH step 3</figcaption>
+</figure>
+<figure>
+<img src="readme_images/gh_step_4.png" alt="GH step 4" />
+<figcaption aria-hidden="true">GH step 4</figcaption>
+</figure>
+<ul>
+<li>Click the pencil icon to edit your file</li>
+</ul>
+<figure>
+<img src="readme_images/gh_step_5.png" alt="GH Step 5" />
+<figcaption aria-hidden="true">GH Step 5</figcaption>
+</figure>
+<ul>
+<li>Use the built in text editor to fill in the following variables</li>
 </ul>
 <table>
 <colgroup>
@@ -250,12 +283,22 @@ tab</td>
 </tr>
 <tr>
 <td>APC_INFO</td>
-<td>Text of ‘more information’ expander</td>
+<td>Text of ‘More information about APCs’ expander on the
+<strong>Help</strong> tab</td>
 </tr>
 <tr>
 <td>HELP_MESSAGE</td>
 <td>Whatever text you’d like at the bottom of the app, you can use <a
 href="https://www.markdownguide.org/">markdown</a> here</td>
+</tr>
+<tr>
+<td>MISSING_TITLE_HELP</td>
+<td>Text to display in the ‘What if my title isn’t listed here?’
+expander on the underneath the pick list.</td>
+</tr>
+<tr>
+<td>HELP_MESSAGE</td>
+<td>Tex to display right underneath the pick list.</td>
 </tr>
 <tr>
 <td>LOGGING</td>
@@ -272,14 +315,76 @@ for a size of 200px</td>
 </tr>
 </tbody>
 </table>
-<h3 id="deploy-to-streamlit-cloud-to-still-be-completed">Deploy to
-Streamlit Cloud (To still be completed)</h3>
 <ul>
-<li>Head to <a href="">Streamlit cloud</a></li>
-<li>New app</li>
-<li>Connect to Github</li>
-<li>find the url of your forked repository</li>
+<li>Once done, click <strong>Commit Changes</strong> in the top</li>
 </ul>
+<figure>
+<img src="readme_images/gh_step_6.png" alt="GH Step 6" />
+<figcaption aria-hidden="true">GH Step 6</figcaption>
+</figure>
+<ul>
+<li>Add in a meaningful message and description and click <strong>Commit
+Changes</strong></li>
+</ul>
+<figure>
+<img src="readme_images/gh_step_7.png" alt="GH Step 7" />
+<figcaption aria-hidden="true">GH Step 7</figcaption>
+</figure>
+<h3 id="deploy-to-streamlit-cloud">Deploy to Streamlit Cloud</h3>
+<ul>
+<li>Head to <a href="https://streamlit.io/cloud">Streamlit cloud</a> and
+click <strong>Free</strong> in the deploying button along the top</li>
+</ul>
+<figure>
+<img src="readme_images/sl_step_1.png" alt="Streamlit Step 1" />
+<figcaption aria-hidden="true">Streamlit Step 1</figcaption>
+</figure>
+<ul>
+<li>Continue to sign-in and create your account</li>
+</ul>
+<figure>
+<img src="readme_images/sl_step_2.png" alt="Streamlit Step 2" />
+<figcaption aria-hidden="true">Streamlit Step 2</figcaption>
+</figure>
+<ul>
+<li>Once logged in look for the Create app button</li>
+</ul>
+<figure>
+<img src="readme_images/sl_step_3.png" alt="Streamlit Step 3" />
+<figcaption aria-hidden="true">Streamlit Step 3</figcaption>
+</figure>
+<ul>
+<li>Deploy a public app from Github</li>
+</ul>
+<figure>
+<img src="readme_images/sl_step_4.png" alt="Streamlit Step 4" />
+<figcaption aria-hidden="true">Streamlit Step 4</figcaption>
+</figure>
+<ul>
+<li>Click <em>Deploy Now</em> to begin.</li>
+</ul>
+<figure>
+<img src="readme_images/sl_step_5.png" alt="Streamlit Step 5" />
+<figcaption aria-hidden="true">Streamlit Step 5</figcaption>
+</figure>
+<ul>
+<li>You’ll need to authorize access to Github from Streamlit. Clicking
+on the green button will launch a login / password ask for Github.
+Complete that and you’ll be back at Streamlit.</li>
+</ul>
+<p>Once back in Streamlit</p>
+<ul>
+<li>Fill in the details and click Deploy</li>
+<li>You’ll need to paste in your GitHub Repository URL</li>
+<li>Change Main file path to <code>src/index.py</code></li>
+<li>Give it a good url in the App URL field</li>
+<li>Click <em>Deploy</em> when all details are filled in</li>
+</ul>
+<figure>
+<img src="readme_images/sl_step_6.png" alt="Streamlit Step 6" />
+<figcaption aria-hidden="true">Streamlit Step 6</figcaption>
+</figure>
+<p>Give it a moment and head over to your URL of your app!</p>
 <h2 id="upgrading-and-modifying-apc-details">Upgrading and modifying
 apc-details</h2>
 <p>First make a back-up copy of <code>src/config.py</code> by copying it

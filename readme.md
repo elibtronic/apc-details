@@ -28,7 +28,7 @@ This video will explain how the platform works and a quick look at how to run it
 
 ----
 
-📀 VIDEO DEMO 📀
+📀 VIDEO DEMO COMING SOON 📀
 
 ----
 
@@ -185,23 +185,38 @@ Streamlit can look directly at a GitHub repository to deploy an app. You’ll ne
 
 - Continue to sign-in and create your account
 
+
 ![Streamlit Step 2](readme_images/sl_step_2.png)
 
 - Once logged in look for the Create app button
+
 
 ![Streamlit Step 3](readme_images/sl_step_3.png)
 
 - Deploy a public app from Github
 
+
+
 ![Streamlit Step 4](readme_images/sl_step_4.png)
+
+- Click _Deploy Now_ to begin.
+
+![Streamlit Step 5](readme_images/sl_step_5.png)
+
+- You’ll need to authorize access to Github from Streamlit. Clicking on the green button will launch a login / password ask for Github. Complete that and you’ll be back at Streamlit.
+
+Once back in Streamlit
 
 - Fill in the details and click Deploy
 - You’ll need to paste in your GitHub Repository URL
 - Change Main file path to `src/index.py`
 - Give it a good url in the App URL field
+- Click _Deploy_ when all details are filled in
 
 
-![Streamlit Step 5](readme_images/sl_step_5.png)
+
+
+![Streamlit Step 6](readme_images/sl_step_6.png)
 
 Give it a moment and head over to your URL of your app!
 
